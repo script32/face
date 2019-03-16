@@ -1,6 +1,6 @@
-###Proceso de preparacion del servidor Ubuntu 18.04#############
+#Proceso de preparacion del servidor Ubuntu 18.04
 
-##Paso 1. Actualizacion e instalacion##
+##Paso 1. Actualizacion e instalacion
 
 sudo apt-get update
 sudo apt-get install git
@@ -28,28 +28,28 @@ echo "# Virtual Environment Wrapper" >> ~/.bashrc
 echo "source /usr/local/bin/virtualenvwrapper.sh" >> ~/.bashrc
 source ~/.bashrc
 
-###### Para Python 2 ######
+### Para Python 2
 
-# crear virtual environment
+#### crear virtual environment
 mkvirtualenv facecourse-py2 -p python2
 workon facecourse-py2
   
-# Ahora instala bibliotecas de Python dentro de este virtual environment
+#### Ahora instala bibliotecas de Python dentro de este virtual environment
 pip install numpy scipy matplotlib scikit-image scikit-learn ipython
   
-# salir virtual environment
+#### salir virtual environment
 deactivate
   
-###### Para Python 3 ######
-# create virtual environment
+### Para Python 3
+#### create virtual environment
 mkvirtualenv facecourse-py3 -p python3
 workon facecourse-py3
 
-# ahora instala bibliotecas de Python dentro de este entorno virtual
+#### ahora instala bibliotecas de Python dentro de este entorno virtual
 pip install numpy scipy matplotlib scikit-image scikit-learn ipython
 
-## Paso 2: Compilar DLib ##
-## Paso 2.1: Compilar binario de C ++ ##
+##Paso 2: Compilar DLib
+###Paso 2.1: Compilar binario de C ++
 
 wget http://dlib.net/files/dlib-19.6.tar.bz2
 tar xvf dlib-19.6.tar.bz2
@@ -64,28 +64,28 @@ cd ..
 
 pkg-config --libs --cflags dlib-1
 
-## Paso 2.2: Compilar el módulo de Python ##
-### Para Python 2 ###
+###Paso 2.2: Compilar el módulo de Python
+####Para Python 2
 workon facecourse-py2
  
-### Para Python 3 ###
+####Para Python 3
 workon facecourse-py3
 
-# mover al directorio raíz de dlib
+#####mover al directorio raíz de dlib
 cd dlib-19.6
 python setup.py install
-# limpiar (este paso es necesario si desea compilar dlib para Python2 y Python3)
+#####limpiar (este paso es necesario si desea compilar dlib para Python2 y Python3)
 rm -rf dist
 rm -rf tools/python/build
 rm python_examples/dlib.so
 
-##Comprobar la instlacion blib Python3
+###Comprobar la instlacion blib Python3
 pip3 install dlib
 
-##Instalar face_recognition Python3
+###Instalar face_recognition Python3
 pip3 install face_recognition
 
-##Instalar buscador de archivo bien util
+###Instalar buscador de archivo bien util
 apt-get install apt-file
 
 
@@ -115,7 +115,7 @@ https://www.digitalocean.com/community/tutorials/how-to-install-nginx-on-ubuntu-
 sudo apt install python3-pip python3-dev build-essential libssl-dev libffi-dev python3-setuptools
 sudo apt install python3-venv
 
-#buscar la carpeta que genero la descarga del git clone, face
+###buscar la carpeta que genero la descarga del git clone, face
 cd path/face
 
 python3.6 -m venv face
@@ -125,7 +125,7 @@ sudo pip install wheel
 
 pip3 install gunicorn flask
 
-#comprobar que no tenga error y generar gunicorn
+###comprobar que no tenga error y generar gunicorn
 gunicorn --bind 0.0.0.0:5000 wsgi:app
 
 CTRL-C
@@ -197,10 +197,13 @@ sudo systemctl restart nginx
 sudo ufw delete allow 5000
 sudo ufw allow 'Nginx Full'
 
-#sudo less /var/log/nginx/error.log: checks the Nginx error logs.
-#sudo less /var/log/nginx/access.log: checks the Nginx access logs.
-#sudo journalctl -u nginx: checks the Nginx process logs.
-#sudo journalctl -u myproject: checks your Flask app's Gunicorn logs.
-
+###Comandos mas usados
+####sudo less /var/log/nginx/error.log: ver el log de errores de nginx.
+####sudo less /var/log/nginx/access.log: ver los de acceso de nginx.
+####sudo journalctl -u nginx: ver log en el proceso de nginx.
+####sudo journalctl -u face: Chekea los logs de la aplicacion.
+####sudo sudo systemctl status face: ve el status de la aplicacion
+####sudo sudo systemctl start face: inicia la apliaccion
+####sudo sudo systemctl stop face: para la aplicacion
 
 
