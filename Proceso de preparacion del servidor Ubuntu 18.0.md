@@ -1,6 +1,6 @@
-#Proceso de preparacion del servidor Ubuntu 18.04
+# Proceso de preparacion del servidor Ubuntu 18.04
 
-##Paso 1. Actualizacion e instalacion
+## Paso 1. Actualizacion e instalacion
 
 sudo apt-get update
 sudo apt-get install git
@@ -20,7 +20,7 @@ sudo -H pip3 install -U pip numpy
 pip2 install virtualenv virtualenvwrapper
 pip3 install virtualenv virtualenvwrapper
 
-##Paso 1.1 Instalar virtual environment
+## Paso 1.1 Instalar virtual environment
 sudo pip2 install virtualenv virtualenvwrapper
 sudo pip3 install virtualenv virtualenvwrapper
 
@@ -64,37 +64,34 @@ cd ..
 
 pkg-config --libs --cflags dlib-1
 
-###Paso 2.2: Compilar el módulo de Python
-####Para Python 2
+### Paso 2.2: Compilar el módulo de Python
+#### Para Python 2
 workon facecourse-py2
  
-####Para Python 3
+#### Para Python 3
 workon facecourse-py3
 
-#####mover al directorio raíz de dlib
+##### mover al directorio raíz de dlib
 cd dlib-19.6
 python setup.py install
-#####limpiar (este paso es necesario si desea compilar dlib para Python2 y Python3)
+##### limpiar (este paso es necesario si desea compilar dlib para Python2 y Python3)
 rm -rf dist
 rm -rf tools/python/build
 rm python_examples/dlib.so
 
-###Comprobar la instlacion blib Python3
+### Comprobar la instlacion blib Python3
 pip3 install dlib
 
-###Instalar face_recognition Python3
+### Instalar face_recognition Python3
 pip3 install face_recognition
 
-###Instalar buscador de archivo bien util
+### Instalar buscador de archivo bien util
 apt-get install apt-file
 
-
-
-##Paso 3. Clonar Github Face
+## Paso 3. Clonar Github Face
 git clone https://github.com/script32/face
 
-
-##Paso 4. Configuracion Nginx y Firewall
+## Paso 4. Configuracion Nginx y Firewall
 
 sudo apt install nginx
 
@@ -104,18 +101,17 @@ sudo ufw allow 22/tcp
 sudo ufw allow 2222/tcp
 sudo ufw allow 8000/tcp
 
-
 systemctl status nginx
 
 Referencia
 https://www.digitalocean.com/community/tutorials/how-to-install-nginx-on-ubuntu-18-04
 
 
-##Paso 5, Instalacion y Activacion de Flask
+## Paso 5, Instalacion y Activacion de Flask
 sudo apt install python3-pip python3-dev build-essential libssl-dev libffi-dev python3-setuptools
 sudo apt install python3-venv
 
-###buscar la carpeta que genero la descarga del git clone, face
+### buscar la carpeta que genero la descarga del git clone, face
 cd path/face
 
 python3.6 -m venv face
@@ -125,7 +121,7 @@ sudo pip install wheel
 
 pip3 install gunicorn flask
 
-###comprobar que no tenga error y generar gunicorn
+### comprobar que no tenga error y generar gunicorn
 gunicorn --bind 0.0.0.0:5000 wsgi:app
 
 CTRL-C
@@ -197,13 +193,11 @@ sudo systemctl restart nginx
 sudo ufw delete allow 5000
 sudo ufw allow 'Nginx Full'
 
-###Comandos mas usados
-####sudo less /var/log/nginx/error.log: ver el log de errores de nginx.
-####sudo less /var/log/nginx/access.log: ver los de acceso de nginx.
-####sudo journalctl -u nginx: ver log en el proceso de nginx.
-####sudo journalctl -u face: Chekea los logs de la aplicacion.
-####sudo sudo systemctl status face: ve el status de la aplicacion
-####sudo sudo systemctl start face: inicia la apliaccion
-####sudo sudo systemctl stop face: para la aplicacion
-
-
+### Comandos mas usados
+#### sudo less /var/log/nginx/error.log: ver el log de errores de nginx.
+#### sudo less /var/log/nginx/access.log: ver los de acceso de nginx.
+#### sudo journalctl -u nginx: ver log en el proceso de nginx.
+#### sudo journalctl -u face: Chekea los logs de la aplicacion.
+#### sudo sudo systemctl status face: ve el status de la aplicacion
+#### sudo sudo systemctl start face: inicia la apliaccion
+#### sudo sudo systemctl stop face: para la aplicacion
