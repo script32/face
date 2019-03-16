@@ -1,77 +1,51 @@
-from flask import Flask
+import os
+import json
+import face_recognition
+from flask import Flask,redirect, url_for, request, Response
 from flask_restful import Api, Resource, reqparse
+import utils
+#Python para implementar microservicios
 
 app = Flask(__name__)
 api = Api(app)
 
-users = [
-    {
-        "name": "Nicholas",
-        "age": 42,
-        "occupation": "Network Engineer"
-    },
-    {
-        "name": "Elvin",
-        "age": 32,
-        "occupation": "Doctor"
-    },
-    {
-        "name": "Jass",
-        "age": 22,
-        "occupation": "Web Developer"
-    }
-]
+#Identifica la carpeta donde se dejaran las fotografias que se suben
+UPLOAD_FOLDER = os.path.basename('uploads')
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-class User(Resource):
-    def get(self, name):
-        for user in users:
-            if(name == user["name"]):
-                return user, 200
-        return "User not found", 404
+kycfaceid= utils.kycfaceid
 
-    def post(self, name):
-        parser = reqparse.RequestParser()
-        parser.add_argument("age")
-        parser.add_argument("occupation")
-        args = parser.parse_args()
-
-        for user in users:
-            if(name == user["name"]):
-                return "User with name {} already exists".format(name), 400
-
-        user = {
-            "name": name,
-            "age": args["age"],
-            "occupation": args["occupation"]
-        }
-        users.append(user)
-        return user, 201
-
-    def put(self, name):
-        parser = reqparse.RequestParser()
-        parser.add_argument("age")
-        parser.add_argument("occupation")
-        args = parser.parse_args()
-
-        for user in users:
-            if(name == user["name"]):
-                user["age"] = args["age"]
-                user["occupation"] = args["occupation"]
-                return user, 200
+@app.route('/kycfaceid/recognize', methods=['POST'])
+def recognize():
+    file = request.files['image']
+    f = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
         
-        user = {
-            "name": name,
-            "age": args["age"],
-            "occupation": args["occupation"]
-        }
-        users.append(user)
-        return user, 201
+    file.save(f)
 
-    def delete(self, name):
-        global users
-        users = [user for user in users if user["name"] != name]
-        return "{} is deleted.".format(name), 200
-      
-api.add_resource(User, "/rest/kycfaceid/<string:name>")
+    verifica = kycfaceid.recognize(f, "groupId")
 
-app.run(debug=True)
+    js = json.dumps(verifica)
+    resp = Response(js, status=200, mimetype='application/json')
+
+    return  resp
+
+@app.route('/kycfaceid/verify', methods=['POST'])
+def verify():
+    file = request.files['image']
+    userid = request.form['userid']
+
+    f = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+        
+    file.save(f)
+
+    verifica = kycfaceid.verify(f, userId)
+
+    js = json.dumps(verifica)
+    resp = Response(js, status=200, mimetype='application/json')
+
+    return  resp
+
+
+        
+if __name__ == "__main__":
+ app.run(host='0.0.0.0')

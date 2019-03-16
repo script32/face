@@ -1,25 +1,17 @@
 import requests
 import os
 import json
+#Libreria de face_recognition, para realizar el test
 import face_recognition
-
 
 class kycfaceid:
 
-import requests
-import os
-import json
-import face_recognition
-
-
-class kycfaceid:
-
-  def userFaceAuth(userId, faceFilePath):
-    if((not os.path.exists(faceFilePath))): return {"error":"invalid_input", "message" : faceFilePath+" does not exist"}
-    if(type(userId) is not str): return {"error" : "invalid_input", "message" : "userId must be a string"}
+  def userFaceAuth(faceFilePath, userId):
+    if((not os.path.exists(faceFilePath))): return {"error":"archivo no valido", "mensaje" : faceFilePath+" no existe"}
+    if(type(userId) is not str): return {"error" : "entra no valida", "mensaje" : "userId tiene que ser texto"}
 
     try:
-
+      #Reconocimiento por medio de la libreria face_recognition
       image_entry = face_recognition.load_image_file(faceFilePath)
       entry_encoding = face_recognition.face_encodings(image_entry)[0]
 
@@ -27,11 +19,21 @@ class kycfaceid:
       unknown_face_encoding = face_recognition.face_encodings(unknown_picture)[0]
 
       response = face_recognition.compare_faces([entry_encoding], unknown_face_encoding)
+      #--------------------------------------------------------
+
+      #Construccion del arreglo para respuesta
+      data = {
+        'validate': str(response[0]),
+        'faceid' : 3,
+        'personId': 0,
+        'label': str(faceFilePath)
+       }
+       #-------------------------------------
 
     except Exception as e:
-      print (str(e))
+      return str(e)
 
-    return response[0]
+    return data
 
 
   def userCreate(userId, details):
@@ -41,28 +43,28 @@ class kycfaceid:
     try:
      response = 'none'
     except Exception as e:
-      print (str(e))
+      return str(e)
 
-    return response;
+    return response
 
 
-  def userAddFace(userId, faceFilePath):
-    if((not os.path.exists(faceFilePath))): return {"error":"invalid_input", "message" : faceFilePath+" does not exist"}
-    if(type(userId) is not str): return {"error" : "invalid_input", "message" : "userId must be a string"}
+  def userAddFace(faceFilePath, userId):
+    if((not os.path.exists(faceFilePath))): return {"error":"archivo no valido", "mensaje" : faceFilePath+" no existe"}
+    if(type(userId) is not str): return {"error" : "entra no valida", "mensaje" : "userId tiene que ser texto"}
 
     try:
      response = 'none'
     except Exception  as e:
-      print (str(e))
+      return str(e)
 
-      return response
+    return response
 
   def recognize(faceFilePath, groupId):
-    if((not os.path.exists(faceFilePath))): return {"error":"invalid_input", "message" : faceFilePath+" does not exist"}
-    if(type(groupId) is not str): return {"error" : "invalid_input", "message" : "groupId must be a string"}
+    if((not os.path.exists(faceFilePath))): return {"error":"archivo no valido", "mensaje" : faceFilePath+" no existe"}
+    if(type(groupId) is not str): return {"error" : "entra no valida", "mensaje" : "userId tiene que ser texto"}
 
     try:
-
+      #Reconocimiento por medio de la libreria face_recognition
       image_entry = face_recognition.load_image_file(faceFilePath)
       entry_encoding = face_recognition.face_encodings(image_entry)[0]
 
@@ -70,19 +72,28 @@ class kycfaceid:
       unknown_face_encoding = face_recognition.face_encodings(unknown_picture)[0]
 
       response = face_recognition.compare_faces([entry_encoding], unknown_face_encoding)
+      #--------------------------------------------------------
+      
+      #Construccion del arreglo para respuesta          
+      data = {
+        'validate': str(response[0]),
+        'faceid' : 3,
+        'personId': 0,
+        'label': str(faceFilePath)
+       }
+      #--------------------------------------
 
     except Exception as e:
-      print (str(e))
+      return str(e)
 
-    return response[0]
+    return data
 
- def verify(faceFilePath, userId):
+  def verify(faceFilePath, userId):
     if((not os.path.exists(faceFilePath))): return {"error":"archivo no valido", "mensaje" : faceFilePath+" no existe"}
     if(type(userId) is not str): return {"error" : "entra no valida", "mensaje" : "userId tiene que ser texto"}
-
-
+    
     try:
-
+      #Reconocimiento por medio de la libreria face_recognition
       image_entry = face_recognition.load_image_file(faceFilePath)
       entry_encoding = face_recognition.face_encodings(image_entry)[0]
 
@@ -90,9 +101,18 @@ class kycfaceid:
       unknown_face_encoding = face_recognition.face_encodings(unknown_picture)[0]
 
       response = face_recognition.compare_faces([entry_encoding], unknown_face_encoding)
+      #---------------------------------------------------------------------------
 
+      #Construccion del arreglo para respuesta
+      data = {
+        'validate': str(response[0]),
+        'faceid' : userId,
+        'personId': 0,
+        'label': str(faceFilePath)
+       }
+       #-------------------------------------
 
     except Exception  as e:
-      print (str(e))
+      return str(e)
 
-    return response[0]
+    return data
