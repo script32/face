@@ -1,0 +1,45 @@
+## /kycface/user/faceauth
+
+Once the user's face(s) are registered with either enroll or addFace API, this API allows to authenticate the user. The response of this API would provide the user's token, that can be used for making API calls on behalf of the user.
+
+
+* **URL** : `/user/faceauth`
+  
+* **Method:** `POST`
+
+* **Header**
+	
+	- content-type : 'formdata'
+	
+* **Request Body**
+
+	- userId
+	- image : face image
+
+ **Success Response:**
+
+  * **Code:** 200 <br />
+  * Schema : 
+		
+			
+		{
+			"status" : "success",
+			"statusCode" : "200",
+			"result" : {
+				"token": "*************************************"
+			}
+		}
+		
+	
+
+* **Sample Call:**
+
+   	
+    	curl --request POST \
+			--url 'https://kycface.mooo.com/kycface/user/faceauth' \
+			--header 'content-type: multipart/form-data' \
+			--form 'userId=+910123456789' \
+			--form image=@image_path.jpg \
+			--form permanent=false
+    	
+    	

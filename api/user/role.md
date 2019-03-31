@@ -1,0 +1,41 @@
+## /kycface/user/role
+
+Currently the supported roles are `user` and `admin`. This API call is used set the role of the user.
+
+* **URL** : `/user/role`
+  
+* **Method:** `POST`
+
+* **Header**
+	
+	- content-type : 'application/json'
+	- token
+	
+* **Request Body**
+
+	- userId
+	- role
+	  
+* **Success Response:**
+
+  * **Code:** 200 <br />
+  * Schema : 
+		
+			
+		{
+			"status" : "success",
+			"statusCode" : "200"
+		}
+		
+	
+
+* **Sample Call:**
+
+   	
+    	curl --request POST \
+  			  --url 'https://kycface.mooo.com/kycface/user/role' \
+            --header 'content-type: application/json' \
+            --header 'token: {{token}}' \
+            --data '{"roles":"user", "userId" : "+91123141213"}'
+    	
+    	
