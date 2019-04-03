@@ -1,4 +1,4 @@
-## /kycface/user/role
+## /user/role
 
 Currently the supported roles are `user` and `admin`. This API call is used set the role of the user.
 
@@ -9,6 +9,8 @@ Currently the supported roles are `user` and `admin`. This API call is used set 
 * **Header**
 	
 	- content-type : 'application/json'
+	- tenantid 
+	- tenantkey
 	- token
 	
 * **Request Body**
@@ -35,7 +37,9 @@ Currently the supported roles are `user` and `admin`. This API call is used set 
     	curl --request POST \
   			  --url 'https://kycface.mooo.com/kycface/user/role' \
             --header 'content-type: application/json' \
+            --header 'tenantid: {{tenantid}}' \
+            --header 'tenantkey: {{tenantkey}}' \
             --header 'token: {{token}}' \
-            --data '{"roles":"user", "userId" : "+91123141213"}'
+            --data '{"roles":"user", "userId" : "13"}'
     	
     	

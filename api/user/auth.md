@@ -1,4 +1,4 @@
-## /kycface/user/auth
+## /user/auth
 
 If the tenant uses phone numbers as userId, then this API call can be used to obtain the user token. This has to be called after the /user/getOTP api call.
 
@@ -9,11 +9,14 @@ If the tenant uses phone numbers as userId, then this API call can be used to ob
 * **Header**
 	
 	- content-type : 'application/json'
+	- tenantid 
+	- tenantkey
 	
 * **Request Body**
 
 	- userId
 	- otp 
+	- permanent : true/false (boolean) /\* A temporary token expires in 15 mins \*/
   
 * **Success Response:**
 
@@ -35,8 +38,10 @@ If the tenant uses phone numbers as userId, then this API call can be used to ob
 
    	
     	curl --request POST \
-  			--url 'https://kycface.mooo.com/kycface/user/auth' \
+  			  --url 'https://kycface.mooo.com/kycface/user/auth' \
             --header 'content-type: application/json' \
-            --data '{"userId":"+910123456789","otp":"1234"}'
+            --header 'tenantid: {{tenantid}}' \
+            --header 'tenantkey: {{tenantkey}}' \
+            --data '{"userId":"789","permanent" : false}'
     	
     	

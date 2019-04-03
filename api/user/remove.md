@@ -1,4 +1,4 @@
-## /kycface/user/remove
+## /user/remove
 
 The user can be de-registered from the tenant with this API call.
 
@@ -9,6 +9,8 @@ The user can be de-registered from the tenant with this API call.
 * **Header**
 	
 	- content-type : 'application/json'
+	- tenantid 
+	- tenantkey
 	- token
 	
 * **Request Body**
@@ -34,6 +36,8 @@ The user can be de-registered from the tenant with this API call.
     	curl --request POST \
   			  --url 'https://kycface.mooo.com/kycface/user/remove' \
             --header 'content-type: application/json' \
+            --header 'tenantid: {{tenantid}}' \
+            --header 'tenantkey: {{tenantkey}}' \
             --header 'token: {{token}}' \
             --data '{"userId":"+910123456789"}'
     	

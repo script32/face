@@ -1,4 +1,4 @@
-## /kycface/user/edit
+## /user/edit
 
 Edit the user details with this API call.
 
@@ -9,6 +9,8 @@ Edit the user details with this API call.
 * **Header**
 	
 	- content-type : 'application/json'
+	- tenantid 
+	- tenantkey
 	- token
 	
 * **Request Body**
@@ -34,6 +36,8 @@ Edit the user details with this API call.
     	curl --request POST \
   			--url 'https://kycface.mooo.com/kycface/user/edit' \
             --header 'content-type: application/json' \
+            --header 'tenantid: {{tenantid}}' \
+            --header 'tenantkey: {{tenantkey}}' \
             --data '{"userId":"+910123456789","details":"some string that you want to store"}'
 
 

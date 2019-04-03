@@ -1,6 +1,6 @@
-## /kycface/user/addFace
+## /user/addFace
 
-Register additional faces to the user to increase accuracy. Anywhere between 1-5 faces would be sufficient in most scenarios. the faceId would be provided back in the response. If the face is not detected by the system then the faceId would not be present in the response.
+Register additional faces to the user to increase accuracy. Anywhere between 1-5 faces would be sufficient in most scenarios. The faceId would be provided back in the response. If the face is not detected by the system then the faceId would not be present in the response.
 
 * **URL** : `/user/addFace`
   
@@ -9,12 +9,14 @@ Register additional faces to the user to increase accuracy. Anywhere between 1-5
 * **Header**
 	
 	- content-type : 'formdata'
+	- tenantid 
+	- tenantkey
 	- token
 	
 * **Request Body**
 
 	- userId
-	- image : image in base64
+	- face : face image
   
 * **Success Response:**
 
@@ -38,8 +40,10 @@ Register additional faces to the user to increase accuracy. Anywhere between 1-5
     	curl --request POST \
 			--url 'https://kycface.mooo.com/kycface/user/addFace' \
 			--header 'content-type: multipart/form-data' \
+			--header 'tenantid: {{tenantid}}' \
+			--header 'tenantkey: {{tenantkey}}' \
 			--header 'token: {{token}}' \
-			--form 'userId=+910123456789' \
-			--form image=@image_path.jpg \
+			--form 'userId=789' \
+			--form image=base64Image \
     	
     	

@@ -1,6 +1,6 @@
-## /kycface/group/create
+## /group/create
 
-Create a group with a name and a limit The response would include the group ID, which will be the unique identifier of the group for future references.
+Create a group with a name and limit. The limit is still not yet enforced, will be enforced soon. The response would include the groupId which will be the unique identifier for the group for future reference.
 
 * **URL** : `/group/create`
   
@@ -9,6 +9,8 @@ Create a group with a name and a limit The response would include the group ID, 
 * **Header**
 	
 	- content-type : 'application/json'
+	- tenantid 
+	- tenantkey
 	- token
 	
 * **Request Body**
@@ -36,8 +38,10 @@ Create a group with a name and a limit The response would include the group ID, 
 
    	
     	curl --request POST \
-  		    --url 'https://kycface.mooo.com/kycface/group/create' \
+  			  --url 'https://kycface.mooo.com/kycface/group/create' \
             --header 'content-type: application/json' \
+            --header 'tenantid: {{tenantid}}' \
+            --header 'tenantkey: {{tenantkey}}' \
             --header 'token: {{token}}' \
             --data '{"groupName":"facetestaccess","sizeLimit":100}'
     	

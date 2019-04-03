@@ -1,4 +1,4 @@
-## /kycface/image/verify
+## /image/verify
 
 Verify the person in the image.
 
@@ -9,6 +9,8 @@ Verify the person in the image.
 * **Header**
 	
 	- content-type : 'formdata'
+	- tenantid 
+	- tenantkey
 	- token
 	
 * **Request Body**
@@ -25,8 +27,14 @@ Verify the person in the image.
 			“status”:“success”,
 			“statusCode”:“200",
 			“result”:[{
+				“conf”:98,
 				“faceId”:“8W03lZcW4gyfVqNNtKik5rilZ78347",
+				“left-top-x”:9.286,
+				“left-top-y”:8.046,
+				“width”:78.57,
+				“height”:85.06,
 				“personId”:“+918015768860",
+				“label”:“image0"
 				}
 			]
 		}
@@ -37,8 +45,10 @@ Verify the person in the image.
 
    	
     	curl --request POST \
-			  --url 'https://kycface.mooo.com/kycface/image/verify' \
+			  --url 'https://in.secure.hyperverge.co/iam/v1/image/verify' \
 			  --header 'content-type: multipart/form-data \
+			  --header 'tenantid: {{tenantid}}' \
+			  --header 'tenantkey: {{tenantkey}}' \
 			  --header 'token: {{token}}' \
 			  --form 'userId=+910123456789' \
 			  --form image0=@image_path.jpg    	

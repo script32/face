@@ -1,4 +1,4 @@
-## /kycface/user/enroll
+## /user/enroll
 
 Register a new user with the tenant and add the user to a group.
 
@@ -9,6 +9,8 @@ Register a new user with the tenant and add the user to a group.
 * **Header**
 	
 	- content-type : 'formdata'
+	- tenantid 
+	- tenantkey
 	- token
 	
 * **Request Body**
@@ -16,6 +18,8 @@ Register a new user with the tenant and add the user to a group.
 	- userId
 	- details
 	- groupId
+	- face1
+	- face2
 
   All the images added with any key into the request body will be assumed to be the face of the user being registered.
   
@@ -42,8 +46,13 @@ Register a new user with the tenant and add the user to a group.
 
    	
     	curl -X POST https://kycface.mooo.com/kycface/user/enroll \
-			  -H 'token: zzzz' \
+			  -H 'tenantid: xxx' \
+		  	  -H 'tenantkey: yyyy' \
+		  	  -H 'token: zzzz' \
 		  	  -H 'content-type: multipart/form-data;\
 		  	  -F 'userId=aaaa' \
 		  	  -F 'details=bbbb' \
 		  	  -F 'groupId=cccc' \
+		  	  -F 'face1=@image_path.png' 
+		  	  -F 'face2=@image_path.png'
+    	

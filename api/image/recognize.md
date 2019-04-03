@@ -1,4 +1,4 @@
-## /kycface/image/recognize
+## /image/recognize
 
 Recognize the person in the photo if it is one of people added to the group.
 
@@ -9,10 +9,13 @@ Recognize the person in the photo if it is one of people added to the group.
 * **Header**
 	
 	- content-type : 'formdata'
+	- tenantid 
+	- tenantkey
 	- token
 	
 * **Request Body**
 	- image
+	- groupId
 	  
 * **Success Response:**
 
@@ -24,11 +27,14 @@ Recognize the person in the photo if it is one of people added to the group.
 			“status”:“success”,
 			“statusCode”:“200",
 			“result”:[{
+				“conf”:98,
+				“faceId”:“8W03lZcW4gyfVqNNtKik5rilZ78347",
+				“left-top-x”:9.286,
+				“left-top-y”:8.046,
+				“width”:78.57,
+				“height”:85.06,
 				“personId”:“+918015768860",
-				"name" : "John"
-				"lastName": "Perez"
-				"phone": "+45423342"
-				"GroupId": "2"
+				“label”:“image0"
 				}
 			]
 		}
@@ -39,8 +45,11 @@ Recognize the person in the photo if it is one of people added to the group.
 
    	
     	curl --request POST \
-			  --url 'https://kycface.mooo.com/kycface/image/recognize' \
+			  --url 'https://in.secure.hyperverge.co/iam/v1/image/recognize' \
 			  --header 'content-type: multipart/form-data \
+			  --header 'tenantid: {{tenantid}}' \
+			  --header 'tenantkey: {{tenantkey}}' \
 			  --header 'token: {{token}}' \
-			  --form image=image in base64    	
+			  --form 'groupId=default' \
+			  --form image0=@image_path.jpg    	
     	

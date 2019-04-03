@@ -1,4 +1,4 @@
-## /kycface/user/faceauth
+## /user/faceauth
 
 Once the user's face(s) are registered with either enroll or addFace API, this API allows to authenticate the user. The response of this API would provide the user's token, that can be used for making API calls on behalf of the user.
 
@@ -10,13 +10,16 @@ Once the user's face(s) are registered with either enroll or addFace API, this A
 * **Header**
 	
 	- content-type : 'formdata'
+	- tenantid 
+	- tenantkey
 	
 * **Request Body**
 
 	- userId
 	- image : face image
-
- **Success Response:**
+	- permanent : true/false (boolean) /\* A temporary token expires in 15 mins \*/
+  
+* **Success Response:**
 
   * **Code:** 200 <br />
   * Schema : 
@@ -38,6 +41,8 @@ Once the user's face(s) are registered with either enroll or addFace API, this A
     	curl --request POST \
 			--url 'https://kycface.mooo.com/kycface/user/faceauth' \
 			--header 'content-type: multipart/form-data' \
+			--header 'tenantid: {{tenantid}}' \
+			--header 'tenantkey: {{tenantkey}}' \
 			--form 'userId=+910123456789' \
 			--form image=@image_path.jpg \
 			--form permanent=false

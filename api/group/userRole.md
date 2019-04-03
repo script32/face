@@ -1,4 +1,4 @@
-## /kycface/group/userRole
+## /group/userRole
 
 Change the role of the user in the group to either "user" or "groupAdmin"
 
@@ -9,6 +9,8 @@ Change the role of the user in the group to either "user" or "groupAdmin"
 * **Header**
 	
 	- content-type : 'application/json'
+	- tenantid 
+	- tenantkey
 	- token
 	
 * **Request Body**
@@ -36,6 +38,8 @@ Change the role of the user in the group to either "user" or "groupAdmin"
     	curl --request POST \
   			  --url 'https://kycface.mooo.com/kycface/group/userRole' \
             --header 'content-type: application/json' \
+            --header 'tenantid: {{tenantid}}' \
+            --header 'tenantkey: {{tenantkey}}' \
             --header 'token: {{token}}' \
             --data '{"groupId":"0CwUv4L","userId":"+910123456789","groupRole":"user"}'
     	

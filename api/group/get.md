@@ -1,4 +1,4 @@
-## /kycface/group/get
+## /group/get
 
 Obtain all information about the group.
 
@@ -10,6 +10,8 @@ Obtain all information about the group.
 * **Header**
 	
 	- content-type : 'application/json'
+	- tenantid 
+	- tenantkey
 	- token
 	
 * **Request Body**

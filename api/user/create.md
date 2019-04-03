@@ -1,4 +1,4 @@
-## /kycface/user/create
+## /user/create
 
 Register a new user with the tenant. This performs a subset of actions performed by /user/enroll.
 
@@ -9,12 +9,13 @@ Register a new user with the tenant. This performs a subset of actions performed
 * **Header**
 	
 	- content-type : 'application/json'
+	- tenantid 
+	- tenantkey
 	- token
 	
 * **Request Body**
 
 	- userId
-	- lastname
 	- details
   
 * **Success Response:**
@@ -36,7 +37,9 @@ Register a new user with the tenant. This performs a subset of actions performed
     	curl --request POST \
   			  --url 'https://kycface.mooo.com/kycface/user/create' \
             --header 'content-type: application/json' \
+            --header 'tenantid: {{tenantid}}' \
+            --header 'tenantkey: {{tenantkey}}' \
             --header 'token: {{token}}' \
-            --data '{"userId":"9","details":"some string"}'
+            --data '{"userId":"+910123456789","details":"some string"}'
     	
     	

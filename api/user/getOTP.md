@@ -1,4 +1,4 @@
-## /kycface/user/getOTP
+## /user/getOTP
 
 If the tenant uses the phone numbers as userIds then this API can be utilized for authenticating the user and obtaining the user token. The userId would have to include the country code as well. Eg. +1 - for U.S.A, +91 - India etc.
 
@@ -35,6 +35,8 @@ If the tenant uses the phone numbers as userIds then this API can be utilized fo
     	curl --request POST \
   			  --url 'https://kycface.mooo.com/kycface/user/getOTP' \
             --header 'content-type: application/json' \
+            --header 'tenantid: {{tenantid}}' \
+            --header 'tenantkey: {{tenantkey}}' \
             --data '{"userId" : "+91123141213"}'
     	
     	

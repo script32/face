@@ -1,4 +1,4 @@
-## /kycface/group/addUser
+## /group/addUser
 
 Add an existing user to an existing group.
 
@@ -9,6 +9,8 @@ Add an existing user to an existing group.
 * **Header**
 	
 	- content-type : 'application/json'
+	- tenantid 
+	- tenantkey
 	- token
 	
 * **Request Body**
@@ -32,8 +34,10 @@ Add an existing user to an existing group.
 
    	
     	curl --request POST \
-  			--url 'https://kycface.mooo.com/kycface/group/addUser' \
+  			  --url 'https://kycface.mooo.com/kycface/group/addUser' \
             --header 'content-type: application/json' \
+            --header 'tenantid: {{tenantid}}' \
+            --header 'tenantkey: {{tenantkey}}' \
             --header 'token: {{token}}' \
             --data '{"groupId":"facetestaccess","userId":"+910001231314"}'
     	

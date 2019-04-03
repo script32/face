@@ -1,4 +1,4 @@
-## /kycface/group/list
+## /group/list
 
 List all groups in the tenantId
 
@@ -9,6 +9,8 @@ List all groups in the tenantId
 * **Header**
 	
 	- content-type : 'application/json'
+	- tenantid 
+	- tenantkey
 	- token
 	
 * **Request Body**

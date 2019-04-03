@@ -1,4 +1,4 @@
-## /kycface/group/listUsers
+## /group/listUsers
 
 Lists users in a group
 
@@ -9,6 +9,8 @@ Lists users in a group
 * **Header**
 	
 	- content-type : 'application/json'
+	- tenantid 
+	- tenantkey
 	- token
 	
 * **Request Body**

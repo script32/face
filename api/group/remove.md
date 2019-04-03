@@ -1,4 +1,4 @@
-## /kycface/group/remove
+## /group/remove
 
 Delete the group. But retain the users in the tenant.
 
@@ -9,6 +9,8 @@ Delete the group. But retain the users in the tenant.
 * **Header**
 	
 	- content-type : 'application/json'
+	- tenantid 
+	- tenantkey
 	- token
 	
 * **Request Body**
@@ -34,6 +36,8 @@ Delete the group. But retain the users in the tenant.
     	curl --request POST \
   			  --url 'https://kycface.mooo.com/kycface/group/remove' \
             --header 'content-type: application/json' \
+            --header 'tenantid: {{tenantid}}' \
+            --header 'tenantkey: {{tenantkey}}' \
             --header 'token: {{token}}' \
             --data '{"groupId":"facetestaccess"}'
     	
