@@ -45,11 +45,11 @@ Recognize the person in the photo if it is one of people added to the group.
 
    	
     	curl --request POST \
-			  --url 'https://in.secure.hyperverge.co/iam/v1/image/recognize' \
+			  --url 'https://kycface.mooo.com/kycface/image/recognize' \
 			  --header 'content-type: multipart/form-data \
 			  --header 'tenantid: {{tenantid}}' \
 			  --header 'tenantkey: {{tenantkey}}' \
 			  --header 'token: {{token}}' \
 			  --form 'groupId=default' \
-			  --form image0=@image_path.jpg    	
+			  --form image0=@base64    	
     	

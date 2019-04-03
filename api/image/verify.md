@@ -45,11 +45,11 @@ Verify the person in the image.
 
    	
     	curl --request POST \
-			  --url 'https://in.secure.hyperverge.co/iam/v1/image/verify' \
+			  --url 'https://kycface.mooo.com/kycface/image/verify' \
 			  --header 'content-type: multipart/form-data \
 			  --header 'tenantid: {{tenantid}}' \
 			  --header 'tenantkey: {{tenantkey}}' \
 			  --header 'token: {{token}}' \
 			  --form 'userId=+910123456789' \
-			  --form image0=@image_path.jpg    	
+			  --form image=base64    	
     	
