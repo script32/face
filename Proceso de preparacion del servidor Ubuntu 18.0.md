@@ -1,6 +1,6 @@
-# Proceso de preparacion del servidor Ubuntu 18.04
+#Proceso de preparacion del servidor Ubuntu 18.04
 
-## Paso 1. Actualizacion e instalacion
+##Paso 1. Actualizacion e instalacion
 
 sudo apt-get update
 sudo apt-get install git
@@ -20,7 +20,7 @@ sudo -H pip3 install -U pip numpy
 pip2 install virtualenv virtualenvwrapper
 pip3 install virtualenv virtualenvwrapper
 
-## Paso 1.1 Instalar virtual environment
+##Paso 1.1 Instalar virtual environment
 sudo pip2 install virtualenv virtualenvwrapper
 sudo pip3 install virtualenv virtualenvwrapper
 
@@ -64,54 +64,154 @@ cd ..
 
 pkg-config --libs --cflags dlib-1
 
-### Paso 2.2: Compilar el módulo de Python
-#### Para Python 2
+###Paso 2.2: Compilar el módulo de Python
+####Para Python 2
 workon facecourse-py2
  
-#### Para Python 3
+####Para Python 3
 workon facecourse-py3
 
-##### mover al directorio raíz de dlib
+#####mover al directorio raíz de dlib
 cd dlib-19.6
 python setup.py install
-##### limpiar (este paso es necesario si desea compilar dlib para Python2 y Python3)
+#####limpiar (este paso es necesario si desea compilar dlib para Python2 y Python3)
 rm -rf dist
 rm -rf tools/python/build
 rm python_examples/dlib.so
 
-### Comprobar la instlacion blib Python3
+###Comprobar la instlacion blib Python3
 pip3 install dlib
 
-### Instalar face_recognition Python3
+###Instalar face_recognition Python3
 pip3 install face_recognition
 
-### Instalar buscador de archivo bien util
+###Instalar buscador de archivo bien util
 apt-get install apt-file
 
-## Paso 3. Clonar Github Face
+
+
+##Paso 3. Clonar Github Face
 git clone https://github.com/script32/face
 
-## Paso 4. Configuracion Nginx y Firewall
 
-sudo apt install nginx
+##Paso 4. Configuracion Apache y Firewall
 
 sudo ufw app list
-sudo ufw allow 'Nginx HTTP'
+sudo ufw allow 'Apache2 HTTP'
 sudo ufw allow 22/tcp
 sudo ufw allow 2222/tcp
-sudo ufw allow 8000/tcp
-
-systemctl status nginx
-
-Referencia
-https://www.digitalocean.com/community/tutorials/how-to-install-nginx-on-ubuntu-18-04
+sudo ufw allow 5000/tcp
 
 
-## Paso 5, Instalacion y Activacion de Flask
+###Archivos Apache2 Config:
+####defual-ssl.conf
+***
+	<IfModule mod_ssl.c>
+	 <VirtualHost _default_:443>
+                ServerAdmin cristianrodr@gmail.com
+                ServerName kycface.mooo.com
+
+                DocumentRoot /var/www/html
+		WSGIPassAuthorization On		
+                WSGIScriptAlias / /var/www/flask/app.wsgi
+
+		 <Directory /var/www/flask/face>
+			WSGIProcessGroup face
+		        WSGIApplicationGroup %{GLOBAL}
+		        Order deny,allow
+		        Allow from all
+		</Directory>
+		
+		ProxyRequests off
+		ProxyPreserveHost on
+
+                ErrorLog ${APACHE_LOG_DIR}/error.log
+                CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+                SSLEngine on
+
+
+                <FilesMatch "\.(cgi|shtml|phtml|php)$">
+                                SSLOptions +StdEnvVars
+                </FilesMatch>
+                <Directory /usr/lib/cgi-bin>
+                                SSLOptions +StdEnvVars
+                </Directory>
+
+
+                SSLCertificateFile      /etc/letsencrypt/live/kycface.mooo.com/fullchain.pem
+				SSLCertificateKeyFile /etc/letsencrypt/live/kycface.mooo.com/privkey.pem
+				Include /etc/letsencrypt/options-ssl-apache.conf
+	</VirtualHost>
+	</IfModule>
+
+####000-defualt.conf
+***
+	<VirtualHost *:80>
+	ServerAdmin webmaster@localhost
+	DocumentRoot /var/www/html
+
+	ErrorLog ${APACHE_LOG_DIR}/error.log
+	CustomLog ${APACHE_LOG_DIR}/access.log combined
+	 WSGIDaemonProcess face user=www-data  group=www-data  threads=5 home=/var/www/flask/face
+	 WSGIScriptAlias / /var/www/flask/app.wsgi
+
+	<Directory /var/www/flask/face>
+	 WSGIProcessGroup face
+         WSGIApplicationGroup %{GLOBAL}
+         WSGIScriptReloading On
+         Order deny,allow
+         Allow from all
+       </Directory>
+
+	</VirtualHost>
+
+###Configuracion para SSL (Example.com = Dominio) 
+Importante  tener el dominio direccionado al servidor.
+
+El primer paso para usar Let's Encrypt para obtener un certificado SSL es instalar el software Certbot en su servidor.
+
+Certbot está en desarrollo muy activo, por lo que los paquetes de Certbot proporcionados por Ubuntu tienden a estar desactualizados. 
+
+***
+	sudo add-apt-repository ppa:certbot/certbot
+
+Instale el paquete Apache de Certbot con apt:
+
+***
+	sudo apt install python-certbot-apache
+
+Certbot debe poder encontrar el host virtual correcto en su configuración de Apache para que pueda configurar automáticamente SSL. Específicamente, lo hace buscando una ServerNamedirectiva que coincida con el dominio para el que solicita un certificado.
+
+***
+	sudo nano /etc/apache2/sites-available/defual-ssl.conf
+
+	sudo apache2ctl configtest
+
+Si recibe un error, vuelva a abrir el archivo del host virtual y verifique si hay errores tipográficos o caracteres faltantes. Una vez que la sintaxis de su archivo de configuración sea correcta, vuelva a cargar Apache para cargar la nueva configuración:
+
+***
+	sudo systemctl reload apache2
+
+Certbot ahora puede encontrar el bloque de VirtualHost correcto y actualizarlo.
+
+Permitir HTTPS a través del Firewall
+sudo ufw status
+sudo ufw allow 'Apache Full'
+sudo ufw delete allow 'Apache'
+sudo ufw status
+
+Obtención de un certificado SSL
+sudo certbot --apache -d example.com -d www.example.com
+sudo certbot renew --dry-run
+
+
+
+##Paso 5, Instalacion y Activacion de Flask
 sudo apt install python3-pip python3-dev build-essential libssl-dev libffi-dev python3-setuptools
 sudo apt install python3-venv
 
-### buscar la carpeta que genero la descarga del git clone, face
+###buscar la carpeta que genero la descarga del git clone, face
 cd path/face
 
 python3.6 -m venv face
@@ -121,7 +221,7 @@ sudo pip install wheel
 
 pip3 install gunicorn flask
 
-### comprobar que no tenga error y generar gunicorn
+###comprobar que no tenga error y generar gunicorn
 gunicorn --bind 0.0.0.0:5000 wsgi:app
 
 CTRL-C
@@ -193,11 +293,10 @@ sudo systemctl restart nginx
 sudo ufw delete allow 5000
 sudo ufw allow 'Nginx Full'
 
-### Comandos mas usados
-#### sudo less /var/log/nginx/error.log: ver el log de errores de nginx.
-#### sudo less /var/log/nginx/access.log: ver los de acceso de nginx.
-#### sudo journalctl -u nginx: ver log en el proceso de nginx.
-#### sudo journalctl -u face: Chekea los logs de la aplicacion.
-#### sudo sudo systemctl status face: ve el status de la aplicacion
-#### sudo sudo systemctl start face: inicia la apliaccion
-#### sudo sudo systemctl stop face: para la aplicacion
+###Comandos mas usados
+####sudo journalctl -u face: Chekea los logs de la aplicacion.
+####sudo systemctl status face: ve el status de la aplicacion
+####sudo systemctl start face: inicia la apliaccion
+####sudo systemctl stop face: para la aplicacion
+
+
