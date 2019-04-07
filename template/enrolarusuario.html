@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"> 
 
-  <title>Ciclo Api Kycface</title>
+  <title>Api Kycface Cycle</title>
 
   <!-- Bootstrap CSS CDN -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
@@ -26,6 +26,9 @@
 
   <script type="application/javascript">
     $(document).ready(function () {
+     window.sessionStorage.setItem('tenantid', '103042019');
+     window.sessionStorage.setItem('tenantkey', 'sf3ai8BRsHUllijXmkWDCheXGgdr9cab');
+
 
      fetch('https://kycface.mooo.com/login', {
       method: 'POST',
@@ -36,6 +39,8 @@
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
         'Accept': 'application/json',
+        'tenantid': window.sessionStorage.getItem('tenantid'),
+        'tenantkey': window.sessionStorage.getItem('tenantkey')
       }
     }).then(response => response.json())
      .then(function(data){
@@ -43,11 +48,11 @@
       window.sessionStorage.setItem('token', data.access_token);             
     })
 
-
-
+ 
      var form = $('#enrolaGrupo');
 
      form.submit(function(event){
+
       var group = $('#selgroupFull').val(); 
       var user = $('#selnameFull').val();
       var usuario ="test";
@@ -55,29 +60,31 @@
 
       if ( $.trim(group) != '' && $.trim(user) != '') {
 
-        fetch('https://kycface.mooo.com/kycfaceid/group/adduser', {
-          method: 'POST',
-          body: JSON.stringify({
-            groupId: group,
-            userId: user,
-          }),
-          headers: {
-            'Content-Type': 'application/json; charset=utf-8',
-            'Accept': 'application/json',
-            'Authorization': 'Bearer ' +  window.sessionStorage.getItem('token')
+        $.ajax({
+            type: "POST",
+            url: "https://kycface.mooo.com/kycfaceid/v1/group/adduser",
+            headers: {"Authorization": 'Bearer ' + window.sessionStorage.getItem('token'),
+                  'tenantid': window.sessionStorage.getItem('tenantid'),
+                  'tenantkey': window.sessionStorage.getItem('tenantkey') },
+            data: {groupId: group,
+                   userId: user},            
+            success: function(msg) {  
+              if(msg.result == true)
+                  {
+                   alert("User enrolled in Group");
+                   searchGroupUser()
+                 }                                 
+            },
+           error: function() {
+            
           }
-        }).then(response => response.json())
-        .then(function(data){                      
-          if(data.resultado == true)
-          {
-           alert("Usuario enrolado a Grupo");
-           searchGroupUser()
-         }
-       });  
-      }                              
-      event.preventDefault();
+        });
 
-    });
+      }
+                               
+        event.preventDefault();
+
+      });
 
      $('#sidebarCollapse').on('click', function () {
       $('#sidebar').toggleClass('active');
@@ -85,8 +92,10 @@
 
      $.ajax({
       type: "POST",
-      url: "https://kycface.mooo.com/kycfaceid/user/list",
-      headers: {"Authorization": 'Bearer ' + window.sessionStorage.getItem('token') },
+      url: "https://kycface.mooo.com/kycfaceid/v1/user/list",
+      headers: {"Authorization": 'Bearer ' + window.sessionStorage.getItem('token'),
+            'tenantid': window.sessionStorage.getItem('tenantid'),
+            'tenantkey': window.sessionStorage.getItem('tenantkey') },
       data: "{}",
       contentType: "application/json; charset=utf-8",
       crossDomain: true,
@@ -102,14 +111,16 @@
 
      },
      error: function() {
-      alert("No cargo usuarios");
+      alert("Do not charge users");
     }
   });
 
      $.ajax({
       type: "POST",
-      url: "https://kycface.mooo.com/kycfaceid/group/list",
-      headers: {"Authorization": 'Bearer ' +  window.sessionStorage.getItem('token')},
+      url: "https://kycface.mooo.com/kycfaceid/v1/group/list",
+      headers: {"Authorization": 'Bearer ' +  window.sessionStorage.getItem('token'),
+            'tenantid': window.sessionStorage.getItem('tenantid'),
+            'tenantkey': window.sessionStorage.getItem('tenantkey')},
       data: "{}",
       contentType: "application/json; charset=utf-8",
       crossDomain: true,
@@ -117,15 +128,15 @@
       success: function(msg) {
        var listItems = '<option selected="selected" value="0">- Select -</option>';
 
-       for (var i = 0; i < msg.length; i++) {
-         listItems += "<option value='" + msg[i].groupId + "'>" + msg[i].groupName + "</option>";
+       for (var i = 0; i < msg.result.groups.length; i++) {
+         listItems += "<option value='" + msg.result.groups[i].groupId + "'>" + msg.result.groups[i].groupName + "</option>";
        }
 
        $("#selgroupFull").html(listItems);
 
      },
      error: function() {
-      alert("No cargo grupos");
+      alert("Do not charge groups");
     }
   });
 
@@ -137,18 +148,20 @@
     function searchGroupUser() {
       var id = $('#selnameFull').val();    
 
-      fetch('http://kycface.mooo.com/kycfaceid/group/listuser?userId=' + id, {
+      fetch('http://kycface.mooo.com/kycfaceid/v1/group/listuser?userId=' + id, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json; charset=utf-8',
           'Accept': 'application/json',
-          'Authorization': 'Bearer ' +  window.sessionStorage.getItem('token')
+          'Authorization': 'Bearer ' +  window.sessionStorage.getItem('token'),
+            'tenantid': window.sessionStorage.getItem('tenantid'),
+            'tenantkey': window.sessionStorage.getItem('tenantkey')
         }
       }).then(response => response.json())
       .then(function(data){                      
-       if(data.length>0)
+       if(data.result.length>0)
        {
-        drawTable(data);
+        drawTable(data.result)
       }
     });  
     }                                             
@@ -176,27 +189,27 @@
           <!-- Sidebar -->
           <nav id="sidebar">
             <div class="sidebar-header">
-              <h3>Ciclo Api Kycface</h3>
+              <h3>Api Kycface Cycle</h3>
             </div>
             <ul class="list-unstyled components">
              <p>Menu</p>  
              <li>
-              <a href="/">Inicio</a>
+              <a href="/">Home</a>
             </li>           
             <li>
-              <a href="/kycface/creargrupo">Crea Grupo</a>
+              <a href="/kycface/creargrupo">Create Group</a>
             </li>           
             <li>
-              <a href="/kycface/crearusuario">Crea Usuario</a>
+              <a href="/kycface/crearusuario">Create User</a>
             </li>
             <li>
-              <a href="/kycface/enrolarusuario">Enrolar Usuario a Grupo</a>
+              <a href="/kycface/enrolarusuario">Enroll User to Group</a>
             </li>
             <li>
-              <a href="/kycface/anadircara">Añadir Cara al Usuario</a>
+              <a href="/kycface/anadircara">Add Face to User</a>
             </li>
             <li>
-              <a href="/kycface/detectarrostro">Reconocer Rostro</a>
+              <a href="/kycface/detectarrostro">Recognize Face</a>
             </li>
             <li>
               <a href="/kycface/stream">Stream Video</a>
@@ -207,24 +220,24 @@
         <!-- Page Content -->
         <div id="content">     
          <nav class="navbar navbar-expand-lg navbar-light bg-light">   
-          <h3>Enrolar Usuario a Grupo</h3>  
+          <h3>Enroll User to Group</h3>  
         </nav>           
 
         <div id="Formualrio" class="card" style="width: 18rem;">       
           <div class="card-body" >
            <form id="enrolaGrupo">
              <div class="form-group">
-              <label for="selecioneusuario1">Seleccione Usuario</label>
+              <label for="selecioneusuario1">Select User</label>
               <select id="selnameFull">
               </select>
             </div>
             <div class="form-group">
-              <label for="selecionegrupo1">Seleccione Grupo</label>
+              <label for="selecionegrupo1">Select Group</label>
               <select id="selgroupFull">
               </select>
             </div>                                      
 
-            <button type="submit" class="btn btn-primary">Enviar</button>
+            <button type="submit" class="btn btn-primary">Submit</button>
           </form>
         </div>
       </div>
@@ -233,8 +246,8 @@
          <table id="userGroup">
           <tr>
             <th>Id</th>
-            <th>Nombre de Grupo</th>
-            <th>Tamaño</th>
+            <th>Group name</th>
+            <th>Size</th>
           </tr>
 
         </table>

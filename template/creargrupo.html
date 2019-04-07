@@ -5,7 +5,7 @@
 
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-  <title>Ciclo Api Kycface</title>
+  <title>Api Kycface Cycle</title>
 
   <!-- Bootstrap CSS CDN -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
@@ -24,6 +24,8 @@
 
   <script>
     $(document).ready(function () {
+     window.sessionStorage.setItem('tenantid', '103042019');
+     window.sessionStorage.setItem('tenantkey', 'sf3ai8BRsHUllijXmkWDCheXGgdr9cab');
 
       fetch('https://kycface.mooo.com/login', {
         method: 'POST',
@@ -34,7 +36,9 @@
         headers: {
           'Content-Type': 'application/json; charset=utf-8',
           'Accept': 'application/json',
-          "Authorization": 'Bearer ' + window.sessionStorage.getItem('token')
+          "Authorization": 'Bearer ' + window.sessionStorage.getItem('token'),
+          'tenantid': window.sessionStorage.getItem('tenantid'),
+          'tenantkey': window.sessionStorage.getItem('tenantkey')
         }
       }).then(response => response.json())
       .then(function(data){
@@ -52,30 +56,32 @@
 
       form.submit(function(event){
         var name = $('#groupName').val(); 
-        var face = $('#facetestaccess').val();
+        var size = $('#sizeLimit').val();
 
 
-        if ( $.trim(name) != '' && $.trim(face) != '') {
+        if ( $.trim(name) != '' && $.trim(size) != '') {
 
-          fetch('https://kycface.mooo.com/kycfaceid/group/create', {
-            method: 'POST',
-            body: JSON.stringify({
-              groupName: name,
-              facetestaccess: face,
-            }),
-            headers: {
-              'Content-Type': 'application/json; charset=utf-8',
-              'Accept': 'application/json',
-              "Authorization": 'Bearer ' + window.sessionStorage.getItem('token')
+
+          $.ajax({
+              type: "POST",
+              url: "https://kycface.mooo.com/kycfaceid/v1/group/create",
+              headers: {"Authorization": 'Bearer ' + window.sessionStorage.getItem('token'),
+                    'tenantid': window.sessionStorage.getItem('tenantid'),
+                    'tenantkey': window.sessionStorage.getItem('tenantkey') },
+              data: {groupName: name,
+                sizeLimit: size},            
+              success: function(msg) {  
+                if(msg > 0)
+                  {
+                   alert("Group Created with success");
+                 }                             
+              },
+             error: function() {
+              
             }
-          }).then(response => response.json())
-          .then(function(data){
-            if(data > 0)
-            {
-             alert("Grupo Creado con exito");
-            }           
           });
 
+         
         }
 
           // Prevent default form action
@@ -87,32 +93,30 @@
 </head>
 
 <body tcap-name="main">
-  <div id="results" class="alert alert-primary" role="alert">    
-  </div>
-
+  <div class="wrapper">
   <nav id="sidebar">
     <div class="sidebar-header">
-      <h3>Ciclo Api Kycface</h3>
+      <h3>Api Kycface Cycle</h3>
     </div>
     <ul class="list-unstyled components">
       <p>Menu</p>  
       <li>
-        <a href="/">Inicio</a>
+        <a href="/">home</a>
       </li>           
       <li>
-        <a href="/kycface/creargrupo">Crea Grupo</a>
+        <a href="/kycface/creargrupo">Create Group</a>
       </li>           
       <li>
-        <a href="/kycface/crearusuario">Crea Usuario</a>
+        <a href="/kycface/crearusuario">Create User</a>
       </li>
       <li>
-        <a href="/kycface/enrolarusuario">Enrolar Usuario a Grupo</a>
+        <a href="/kycface/enrolarusuario">Enroll User to Group</a>
       </li>
       <li>
-        <a href="/kycface/anadircara">Añadir Cara al Usuario</a>
+        <a href="/kycface/anadircara">Add Face to User</a>
       </li>
       <li>
-        <a href="/kycface/detectarrostro">Reconocer Rostro</a>
+        <a href="/kycface/detectarrostro">Recognize Face</a>
       </li>
       <li>
         <a href="/kycface/stream">Stream Video</a>
@@ -122,25 +126,25 @@
 
   <!-- Page Content -->
   <div id="content">     
-   <nav class="navbar navbar-expand-lg navbar-light bg-light">   
-    <h3>Crear Grupo</h3>  
-  </nav>           
-  <div class="card" style="width: 18rem;">       
-    <div class="card-body" >
-     <form id="sendGroup" enctype="multipart/form-data">
-       <div class="form-group">
-        <label for="groupname1">Nombre del Grupo</label>
-        <input type="text" class="form-control" id="groupName" name="groupName"aria-describedby="groupHelp" placeholder="ingresar Nombre">        
-      </div>
-      <div class="form-group">
-        <label for="facetestaccess1">Tamaño del Grupo</label>
-        <input type="text" class="form-control" id="facetestaccess" name="facetestaccess" placeholder="ingresar tamaño">
-      </div>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">   
+      <h3>Create Group</h3>  
+    </nav>             
+    <div class="card">       
+      <div class="card-body" >
+       <form id="sendGroup" enctype="multipart/form-data">
+         <div class="form-group">
+          <label for="groupname1">Group name</label>
+          <input type="text" class="form-control" id="groupName" name="groupName"aria-describedby="groupHelp" placeholder="Enter Name">        
+        </div>
+        <div class="form-group">
+          <label for="sizeLimit">Group size</label>
+          <input type="text" class="form-control" id="sizeLimit" name="sizeLimit" placeholder="enter size">
+        </div>
 
-      <button type="submit" class="btn btn-primary">Crear</button>
-    </form>
+        <button type="submit" class="btn btn-primary">Create</button>
+      </form>
+    </div>
   </div>
-</div>
 </div>  
 </div>       
 

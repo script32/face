@@ -5,7 +5,7 @@
 
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-  <title>Ciclo Api Kycface</title>
+  <title>Api Kycface Cycle</title>
 
   <!-- Bootstrap CSS CDN -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
@@ -24,6 +24,9 @@
 
   <script>
     $(document).ready(function () {
+     window.sessionStorage.setItem('tenantid', '103042019');
+     window.sessionStorage.setItem('tenantkey', 'sf3ai8BRsHUllijXmkWDCheXGgdr9cab');
+
       fetch('https://kycface.mooo.com/login', {
         method: 'POST',
         body: JSON.stringify({
@@ -33,7 +36,9 @@
         headers: {
           'Content-Type': 'application/json; charset=utf-8',
           'Accept': 'application/json',
-          "Authorization": 'Bearer ' + window.sessionStorage.getItem('token')
+          "Authorization": 'Bearer ' + window.sessionStorage.getItem('token'),
+          'tenantid': window.sessionStorage.getItem('tenantid'),
+          'tenantkey': window.sessionStorage.getItem('tenantkey')
         }
       }).then(response => response.json())
       .then(function(data){
@@ -53,31 +58,28 @@
         var nameIn = $('#name').val(); 
         var lastnameIn = $('#lastname').val();
         var detailsIn = $('#details').val();
-        var phoneIn = "";
+        var idIn = $('#idText').val();
 
 
         if ( $.trim(nameIn) != '' && $.trim(lastnameIn) != '') {
-           fetch('https://kycface.mooo.com/kycfaceid/user/create', {
-            method: 'POST',
-            body: JSON.stringify({
-              name: nameIn,
-              lastname: lastnameIn,
-              details: detailsIn,
-              phone:  phoneIn
-            }),
-            headers: {
-              'Content-Type': 'application/json; charset=utf-8',
-              'Accept': 'application/json',
-              "Authorization": 'Bearer ' + window.sessionStorage.getItem('token')
+          $.ajax({
+              type: "POST",
+              url: "https://kycface.mooo.com/kycfaceid/v1/user/create",
+              headers: {"Authorization": 'Bearer ' + window.sessionStorage.getItem('token'),
+                    'tenantid': window.sessionStorage.getItem('tenantid'),
+                    'tenantkey': window.sessionStorage.getItem('tenantkey') },
+              data: { name: nameIn,
+                      lastname: lastnameIn,
+                      details: detailsIn,
+                      idIn: idIn},            
+              success: function(msg) {                                    
+                     alert(msg.result);
+                                                
+              },
+             error: function() {
+              
             }
-          }).then(response => response.json())
-          .then(function(data){
-            if(data > 0)
-            {
-             alert("Usuario Creado con exito");
-            }
-          });
-
+          });      
         
         }
 
@@ -94,27 +96,27 @@
     <!-- Sidebar -->
     <nav id="sidebar">
       <div class="sidebar-header">
-        <h3>Ciclo Api Kycface</h3>
+        <h3>Api Kycface Cycle</h3>
       </div>
       <ul class="list-unstyled components">
        <p>Menu</p>  
        <li>
-        <a href="/">Inicio</a>
+        <a href="/">Home</a>
       </li>           
       <li>
-        <a href="/kycface/creargrupo">Crea Grupo</a>
+        <a href="/kycface/creargrupo">Create Group</a>
       </li>           
       <li>
-        <a href="/kycface/crearusuario">Crea Usuario</a>
+        <a href="/kycface/crearusuario">Create User</a>
       </li>
       <li>
-        <a href="/kycface/enrolarusuario">Enrolar Usuario a Grupo</a>
+        <a href="/kycface/enrolarusuario">Enroll User to Group</a>
       </li>
       <li>
-        <a href="/kycface/anadircara">Añadir Cara al Usuario</a>
+        <a href="/kycface/anadircara">Add Face to User</a>
       </li>
       <li>
-        <a href="/kycface/detectarrostro">Reconocer Rostro</a>
+        <a href="/kycface/detectarrostro">Recognize Face</a>
       </li>
       <li>
         <a href="/kycface/stream">Stream Video</a>
@@ -125,7 +127,7 @@
   <!-- Page Content -->
   <div id="content">     
    <nav class="navbar navbar-expand-lg navbar-light bg-light">   
-    <h3>Crear Usuario</h3>  
+    <h3>Create User</h3>  
   </nav>           
   <div class="card" style="width: 18rem;">       
     <div class="card-body" >
@@ -133,16 +135,20 @@
      <form id="sendUser" enctype="multipart/form-data">
 
        <div class="form-group">
-        <label for="name1">Nombre</label>
-        <input type="text" class="form-control" id="name" name="name" aria-describedby="nameHelp" placeholder="Ingrese Nombre">
+        <label for="name1">First name</label>
+        <input type="text" class="form-control" id="name" name="name" aria-describedby="nameHelp" placeholder="Enter Name">
       </div>                                                             
       <div class="form-group">
-        <label for="lastname1">Apellido</label>
-        <input type="text" class="form-control" id="lastname" name="lastname" placeholder="Ingrese su Apellido">
+        <label for="lastname1">Last Name</label>
+        <input type="text" class="form-control" id="lastname" name="lastname" placeholder="Enter your Last Name">
       </div>
       <div class="form-group">
-        <label for="details1">Detalle</label>
-        <input type="text" class="form-control" id="details" name="details" placeholder="Ingrese Detalle ">
+        <label for="details1">Detail</label>
+        <input type="text" class="form-control" id="details" name="details" placeholder="Enter Detail">
+      </div>
+       <div class="form-group">
+        <label for="id">Id</label>
+        <input type="text" class="form-control" id="idText" name="idText" placeholder="Enter an Identifier">
       </div>
 
       <button type="submit" class="btn btn-primary">Submit</button>
