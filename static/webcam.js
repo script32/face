@@ -270,8 +270,13 @@ var Webcam = {
 			// setup webcam video container
 			var video = document.createElement('video');
 			video.setAttribute('autoplay', 'autoplay');
-			video.style.width = '' + this.params.dest_width + 'px';
-			video.style.height = '' + this.params.dest_height + 'px';
+			video.setAttribute('id', 'videoIn');
+			video.setAttribute('name', 'videoIn');
+			video.setAttribute('width', this.params.dest_width);
+			video.setAttribute('height', this.params.dest_height);
+
+			//video.style.width = '' + this.params.dest_width + 'px';
+			//video.style.height = '' + this.params.dest_height + 'px';
 			
 			if ((scaleX != 1.0) || (scaleY != 1.0)) {
 				elem.style.overflow = 'hidden';
