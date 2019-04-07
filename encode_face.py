@@ -13,7 +13,7 @@ crudOperation = crud.CRUD()
 
 class encod:
 
-	def encoding(self,file_name,faceId):
+	def encoding(self,file_name,faceId,tenantid):
 		data = None
 		query=""
 		entry_encoding=""
@@ -33,8 +33,8 @@ class encod:
 			
 			if len(entry_encoding) > 0:
 				retorna="e7"
-				query = """insert into kycface."vectors"("faceId", "vec_low", "vec_high") VALUES('{}', CUBE(array[{}]), CUBE(array[{}]))""".format(
-					faceId,','.join(str(s) for s in entry_encoding[0:64]),
+				query = """insert into kycface."vectors"("faceId","tenantid","vec_low", "vec_high") VALUES('{}','{}', CUBE(array[{}]), CUBE(array[{}]))""".format(
+					faceId,tenantid,','.join(str(s) for s in entry_encoding[0:64]),
 					','.join(str(s) for s in entry_encoding[64:128]),)
 				
 				retorna="e8"

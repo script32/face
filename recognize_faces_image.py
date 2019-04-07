@@ -26,7 +26,7 @@ class matchFace:
 
             if(len(entry_encoding) > 0):
                 retorna="r4"
-                query = """select "faceId" from kycface."vectors" where sqrt(power(CUBE(array[{}]) <-> "vec_low", 2) + power(CUBE(array[{}]) <-> "vec_high", 2)) <= {} """.format(
+                query = """select "faceId","tenantid" from kycface."vectors" where sqrt(power(CUBE(array[{}]) <-> "vec_low", 2) + power(CUBE(array[{}]) <-> "vec_high", 2)) <= {} """.format(
                     ','.join(str(s) for s in entry_encoding[0:64]),
                     ','.join(str(s) for s in entry_encoding[64:128]),
                     threshold,

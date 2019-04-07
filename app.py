@@ -26,7 +26,7 @@ socketio = SocketIO(app)
 CORS(app, supports_credentials=True)
 
 app.config['JWT_SECRET_KEY'] = 'kycface2019_token'
-
+version="v1"
 jwt = JWTManager(app)
 
 
@@ -61,6 +61,11 @@ def anadircara():
 @app.route('/kycface/detectarrostro')
 def detectarrostro():
     return render_template('detectarrostro.html')
+
+@app.route('/kycface/detectarrostro2')
+def detectarrostro2():
+    return render_template('detectarrostro2.html')
+
 
 @app.route('/kycface/stream')
 def stream():
@@ -103,143 +108,224 @@ def video_feed():
      
 
 
-@app.route('/kycfaceid/group/adduser', methods=['POST'])
+@app.route('/kycfaceid/' + version + '/group/adduser', methods=['POST'])
 @jwt_required
 def groupAddUser():
     groupid = request.form['groupId']
     userid = request.form['userId']
-            
-    verifica = kycfaceid.groupAddUser(groupid,userid)
+    tenantid = request.headers.get('Tenantid','No Tenantid')
+    tenantkey = request.headers.get('Tenantkey','No Tenantkey')
 
-    js = json.dumps(verifica, indent=2)
-    resp = Response(js, status=200, mimetype='application/json')
+    checkClient = kycfaceid.veriryTenant(tenantid,tenantkey)
+
+    resp=None
+
+    if(len(checkClient)>0):
+        verifica = kycfaceid.groupAddUser(groupid,userid,tenantid)
+        js = json.dumps(verifica, indent=2)
+        resp = Response(js, status=200, mimetype='application/json')
+    else:
+        resp = Response("Unauthorized", status=401 , mimetype='application/json')
 
     return  resp
 
-@app.route('/kycfaceid/group/create', methods=['POST'])
+@app.route('/kycfaceid/' + version + '/group/create', methods=['POST'])
 @jwt_required
 def groupCreate():    
     groupname = request.form['groupName']
     access = request.form['sizeLimit']
-            
-    verifica = kycfaceid.groupCreate(groupname, access)
-   
-    js = json.dumps(verifica, indent=2)
-    resp = Response(js, status=200, mimetype='application/json')
-    
+    tenantid = request.headers.get('Tenantid','No Tenantid')
+    tenantkey = request.headers.get('Tenantkey','No Tenantkey')
+
+    checkClient = kycfaceid.veriryTenant(tenantid,tenantkey)
+
+    resp=None
+
+    if(len(checkClient)>0):      
+        verifica = kycfaceid.groupCreate(groupname,access,tenantid)
+        js = json.dumps(verifica, indent=2)
+        resp = Response(js, status=200, mimetype='application/json')
+    else:
+        resp = Response("Unauthorized", status=401 , mimetype='application/json')
+
     return  resp
 
-@app.route('/kycfaceid/group/edit', methods=['POST'])
+@app.route('/kycfaceid/' + version + '/group/edit', methods=['POST'])
 @jwt_required
 def groupEdit():
     groupid = request.form['groupId']
     groupmame = request.form['groupName']
     size = request.form['sizeLimit']
-            
-    verifica = kycfaceid.groupEdit(groupid, groupmame,size)
+    tenantid = request.headers.get('Tenantid','No Tenantid')
+    tenantkey = request.headers.get('Tenantkey','No Tenantkey')
+    
+    checkClient = kycfaceid.veriryTenant(tenantid,tenantkey)
 
-    js = json.dumps(verifica, indent=2)
-    resp = Response(js, status=200, mimetype='application/json')
+    resp=None
+
+    if(len(checkClient)>0):
+        verifica = kycfaceid.groupEdit(groupid,groupmame,size,tenantid)
+        js = json.dumps(verifica, indent=2)
+        resp = Response(js, status=200, mimetype='application/json')
+    else:
+        resp = Response("Unauthorized", status=401 , mimetype='application/json')
 
     return  resp
 
-@app.route('/kycfaceid/group/get', methods=['POST'])
+@app.route('/kycfaceid/' + version + '/group/get', methods=['POST'])
 @jwt_required
 def groupGet():
     groupid = request.form['groupId']
-        
-    verifica = kycfaceid.groupGet(groupid)
+    tenantid = request.headers.get('Tenantid','No Tenantid')
+    tenantkey = request.headers.get('Tenantkey','No Tenantkey')
+    
+    checkClient = kycfaceid.veriryTenant(tenantid,tenantkey)
 
-    js = json.dumps(verifica, indent=2)
-    resp = Response(js, status=200, mimetype='application/json')
+    resp=None
+
+    if(len(checkClient)>0):
+        verifica = kycfaceid.groupGet(groupid,tenantid)
+        js = json.dumps(verifica, indent=2)
+        resp = Response(js, status=200, mimetype='application/json')
+    else:
+        resp = Response("Unauthorized", status=401 , mimetype='application/json')
 
     return  resp
 
-@app.route('/kycfaceid/group/list', methods=['GET','POST'])
+@app.route('/kycfaceid/' + version + '/group/list', methods=['GET','POST'])
 @jwt_required
 def groupList():
-        
-    verifica = kycfaceid.groupList()
+    tenantid = request.headers.get('Tenantid','No Tenantid')
+    tenantkey = request.headers.get('Tenantkey','No Tenantkey')
 
-    js = json.dumps(verifica, indent=2)
-    resp = Response(js, status=200, mimetype='application/json')
+    checkClient = kycfaceid.veriryTenant(tenantid,tenantkey)
+
+    resp=None
+
+    if(len(checkClient)>0):
+        verifica = kycfaceid.groupList(tenantid)
+        js = json.dumps(verifica, indent=2)
+        resp = Response(js, status=200, mimetype='application/json')
+    else:
+        resp = Response("Unauthorized", status=401 , mimetype='application/json')
 
     return  resp
 
-@app.route('/kycfaceid/group/listuser', methods=['GET','POST'])
+@app.route('/kycfaceid/' + version + '/group/listuser', methods=['GET','POST'])
 @jwt_required
 def groupListUser():
+    tenantid = request.headers.get('Tenantid','No Tenantid')
+    tenantkey = request.headers.get('Tenantkey','No Tenantkey')
+
+    checkClient = kycfaceid.veriryTenant(tenantid,tenantkey)
+
+    resp=None
     userif=None
-    if request.method == 'POST':
-        userid = request.form['userId']    
+    
+    if(len(checkClient)>0):
+        if request.method == 'POST':
+            userid = request.form['userId']    
+        else:
+            userid = request.args.get('userId')
+        
+        verifica = kycfaceid.groupListUser(userid,tenantid)
+        js = json.dumps(verifica, indent=2)
+        resp = Response(js, status=200, mimetype='application/json')
     else:
-        userid = request.args.get('userId')
-
-    verifica = kycfaceid.groupListUser(userid)
-
-    js = json.dumps(verifica, indent=2)
-    resp = Response(js, status=200, mimetype='application/json')
+        resp = Response("Unauthorized", status=401 , mimetype='application/json')
 
     return  resp
 
-@app.route('/kycfaceid/group/listusers', methods=['POST'])
+@app.route('/kycfaceid/' + version + '/group/listusers', methods=['POST'])
 @jwt_required
 def groupListUsers():
+    tenantid = request.headers.get('Tenantid','No Tenantid')
+    tenantkey = request.headers.get('Tenantkey','No Tenantkey')
     groupid = request.form['groupId']
     userid = request.form['userId']
     grouprole = request.form['groupRole']
-        
-    verifica = kycfaceid.groupListUsers(groupid,userid,grouprole)
 
-    js = json.dumps(verifica, indent=2)
-    resp = Response(js, status=200, mimetype='application/json')
+    checkClient = kycfaceid.veriryTenant(tenantid,tenantkey)
 
+    resp=None
+    
+    if(len(checkClient)>0):    
+        verifica = kycfaceid.groupListUsers(groupid,userid,grouprole,tenantid)
+        js = json.dumps(verifica, indent=2)
+        resp = Response(js, status=200, mimetype='application/json')
+    else:
+        resp = Response("Unauthorized", status=401 , mimetype='application/json')
+    
     return  resp
 
-@app.route('/kycfaceid/group/remove', methods=['POST'])
+@app.route('/kycfaceid/' + version + '/group/remove', methods=['POST'])
 @jwt_required
 def groupRemove():
+    tenantid = request.headers.get('Tenantid','No Tenantid')
+    tenantkey = request.headers.get('Tenantkey','No Tenantkey')
     groupid = request.form['groupId']  
-        
-    verifica = kycfaceid.groupRemove(groupid)
 
-    js = json.dumps(verifica, indent=2)
-    resp = Response(js, status=200, mimetype='application/json')
+    checkClient = kycfaceid.veriryTenant(tenantid,tenantkey)
+
+    resp=None
+
+    if(len(checkClient)>0):    
+        verifica = kycfaceid.groupRemove(groupid,tenantid)
+        js = json.dumps(verifica, indent=2)
+        resp = Response(js, status=200, mimetype='application/json')
+    else:
+        resp = Response("Unauthorized", status=401 , mimetype='application/json')
 
     return  resp
 
-@app.route('/kycfaceid/group/removeuser', methods=['POST'])
+@app.route('/kycfaceid/' + version + '/group/removeuser', methods=['POST'])
 @jwt_required
 def groupRemoveUser():
+    tenantid = request.headers.get('Tenantid','No Tenantid')
+    tenantkey = request.headers.get('Tenantkey','No Tenantkey')
     groupid = request.form['groupId']  
     userid = request.form['userId']  
-        
-    verifica = kycfaceid.groupRemoveUser(groupid, userid)
+    
+    checkClient = kycfaceid.veriryTenant(tenantid,tenantkey)
 
-    js = json.dumps(verifica, indent=2)
-    resp = Response(js, status=200, mimetype='application/json')
+    resp=None
+    if(len(checkClient)>0):
+        verifica = kycfaceid.groupRemoveUser(groupid, userid,tenantid)
+        js = json.dumps(verifica, indent=2)
+        resp = Response(js, status=200, mimetype='application/json')
+    else:
+        resp = Response("Unauthorized", status=401 , mimetype='application/json')
 
     return  resp
 
-@app.route('/kycfaceid/group/userrole', methods=['POST'])
+@app.route('/kycfaceid/' + version + '/group/userrole', methods=['POST'])
 @jwt_required
 def groupUserRole():
+    tenantid = request.headers.get('Tenantid','No Tenantid')
+    tenantkey = request.headers.get('Tenantkey','No Tenantkey')
     groupid = request.form['groupId']  
     userid = request.form['userId']
     grouprole = request.form['groupRole']  
-        
-    verifica = kycfaceid.groupUserRole(groupid, userid, grouprole)
+    
+    checkClient = kycfaceid.veriryTenant(tenantid,tenantkey)
 
-    js = json.dumps(verifica, indent=2)
-    resp = Response(js, status=200, mimetype='application/json')
+    resp=None    
+
+    if(len(checkClient)>0):
+        verifica = kycfaceid.groupUserRole(groupid, userid, grouprole,tenantid)
+        js = json.dumps(verifica, indent=2)
+        resp = Response(js, status=200, mimetype='application/json')
+    else:
+        resp = Response("Unauthorized", status=401 , mimetype='application/json')
 
     return  resp
 
-@app.route('/kycfaceid/user/addface', methods=['POST'])
+@app.route('/kycfaceid/' + version + '/user/addface', methods=['POST'])
 @jwt_required
 def userAddFace():
     try:
-               
+        tenantid = request.headers.get('Tenantid','No Tenantid')
+        tenantkey = request.headers.get('Tenantkey','No Tenantkey')
         data_url = request.form['image']
         userId = request.form['userId']
         dataUrlPattern = re.compile('data:image/(png|jpeg);base64,(.*)$')
@@ -247,229 +333,361 @@ def userAddFace():
         image_data = dataUrlPattern.match(image_data).group(2)
         image_data = image_data.encode()
         image_data = base64.b64decode(image_data)
- 
-        img = "/var/www/flask/face/faces/imageToSave.jpg"
-        with open(img, 'wb') as f:
-            f.write(image_data)
-             
-        verifica = kycfaceid.userAddFace(img, userId)
         
-        js = json.dumps(verifica, indent=2)
-        resp = Response(js, status=200, mimetype='application/json')
+        checkClient = kycfaceid.veriryTenant(tenantid,tenantkey)
+
+        resp=None
+
+        if(len(checkClient)>0):
+            img = "/var/www/flask/face/faces/imageToSave.jpg"
+            with open(img, 'wb') as f:
+                f.write(image_data)
+             
+            verifica = kycfaceid.userAddFace(img,userId,tenantid)
+            js = json.dumps(verifica, indent=2)
+            resp = Response(js, status=200, mimetype='application/json')
+        else:
+            resp = Response("Unauthorized", status=401 , mimetype='application/json')
         
         return  resp
-    except Exception as inst:
-        return Response(inst.args)
+    except Exception as e:
+        return str(e),500
     
 
-@app.route('/kycfaceid/user/auth', methods=['POST'])
+@app.route('/kycfaceid/' + version + '/user/auth', methods=['POST'])
 @jwt_required
 def userAuth():
+    tenantid = request.headers.get('Tenantid','No Tenantid')
+    tenantkey = request.headers.get('Tenantkey','No Tenantkey')
     userid = request.form['userId']     
     otp = request.form['otp']  
-        
-    verifica = kycfaceid.userAuth(userid, opt)
+    
+    checkClient = kycfaceid.veriryTenant(tenantid,tenantkey)
 
-    js = json.dumps(verifica, indent=2)
-    resp = Response(js, status=200, mimetype='application/json')
+    resp=None
+
+    if(len(checkClient)>0):
+        verifica = kycfaceid.userAuth(userid, opt,tenantid)
+        js = json.dumps(verifica, indent=2)
+        resp = Response(js, status=200, mimetype='application/json')
+    else:
+        resp = Response("Unauthorized", status=401 , mimetype='application/json')
 
     return  resp
 
-@app.route('/kycfaceid/user/create', methods=['POST'])
+@app.route('/kycfaceid/' + version + '/user/create', methods=['POST'])
 @jwt_required
 def userCreate():
-    name = request.form['name']
-    lastname = request.form['lastname']              
-    details = request.form['details'] 
-    phone = resquest.form['phone']    
+    try:
+        tenantid = request.headers.get('Tenantid','No Tenantid')
+        tenantkey = request.headers.get('Tenantkey','No Tenantkey')
+        name = request.form['name']
+        lastname = request.form['lastname']              
+        details = request.form['details'] 
+        idIn = request.form['idIn']    
+      
+        checkClient = kycfaceid.veriryTenant(tenantid,tenantkey)
 
-    verifica = kycfaceid.userCreate(name,lastname,details,phone)
+        resp=None
 
-    js = json.dumps(verifica, indent=2)
-    resp = Response(js, status=200, mimetype='application/json')
+        if(len(checkClient)>0):
+            verifica = kycfaceid.userCreate(name,lastname,details,idIn,tenantid)
+            js = json.dumps(verifica, indent=2)
+            resp = Response(js, status=200, mimetype='application/json')
+        else:
+            resp = Response("Unauthorized", status=401 , mimetype='application/json')
+        return  resp
 
-    return  resp
+    except Exception as e:
+        return str(e), 500
 
-@app.route('/kycfaceid/user/edit', methods=['POST'])
+@app.route('/kycfaceid/' + version + '/user/edit', methods=['POST'])
 @jwt_required
 def userEdit():
+    tenantid = request.headers.get('Tenantid','No Tenantid')
+    tenantkey = request.headers.get('Tenantkey','No Tenantkey')
     userid = request.form['userId']      
     details = request.form['details']  
 
-    verifica = kycfaceid.userEdit(userid, details)
+    checkClient = kycfaceid.veriryTenant(tenantid,tenantkey)
 
-    js = json.dumps(verifica, indent=2)
-    resp = Response(js, status=200, mimetype='application/json')
+    resp=None
+
+    if(len(checkClient)>0):
+        verifica = kycfaceid.userEdit(userid, details,tenantid)
+        js = json.dumps(verifica, indent=2)
+        resp = Response(js, status=200, mimetype='application/json')
+    else:
+        resp = Response("Unauthorized", status=401 , mimetype='application/json')
 
     return  resp
 
-@app.route('/kycfaceid/user/renroll', methods=['POST'])
+@app.route('/kycfaceid/' + version + '/user/renroll', methods=['POST'])
 @jwt_required
 def userEnroll():
+    tenantid = request.headers.get('Tenantid','No Tenantid')
+    tenantkey = request.headers.get('Tenantkey','No Tenantkey')
     userid = request.form['userId']      
     details = request.form['details']  
     groupid = request.form['groupId']  
     face1 = request.files['face1'] 
     face2 = request.files['face2'] 
 
-    verifica = kycfaceid.userEnroll(userid, details, groupid, face1, face2)
+    checkClient = kycfaceid.veriryTenant(tenantid,tenantkey)
 
-    js = json.dumps(verifica, indent=2)
-    resp = Response(js, status=200, mimetype='application/json')
+    resp=None
+
+    if(len(checkClient)>0):
+        verifica = kycfaceid.userEnroll(userid, details, groupid, face1, face2,tenantid)
+        js = json.dumps(verifica, indent=2)
+        resp = Response(js, status=200, mimetype='application/json')
+    else:
+        resp = Response("Unauthorized", status=401 , mimetype='application/json')
 
     return  resp
 
-@app.route('/kycfaceid/user/get', methods=['POST'])
+@app.route('/kycfaceid/' + version + '/user/get', methods=['POST'])
 @jwt_required
 def userGet():
+    tenantid = request.headers.get('Tenantid','No Tenantid')
+    tenantkey = request.headers.get('Tenantkey','No Tenantkey')
     userid = request.form['userId']         
 
-    verifica = kycfaceid.userGet(userid)
+    checkClient = kycfaceid.veriryTenant(tenantid,tenantkey)
 
-    js = json.dumps(verifica, indent=2)
-    resp = Response(js, status=200, mimetype='application/json')
+    resp=None
+
+    if(len(checkClient)>0):
+        verifica = kycfaceid.userGet(userid,tenantid)
+        js = json.dumps(verifica, indent=2)
+        resp = Response(js, status=200, mimetype='application/json')
+    else:
+        resp = Response("Unauthorized", status=401 , mimetype='application/json')
 
     return  resp
 
-@app.route('/kycfaceid/user/getopt', methods=['POST'])
+@app.route('/kycfaceid/' + version + '/user/getopt', methods=['POST'])
 @jwt_required
 def userGetOTP():
+    tenantid = request.headers.get('Tenantid','No Tenantid')
+    tenantkey = request.headers.get('Tenantkey','No Tenantkey')
     userid = request.form['userId']         
 
-    verifica = kycfaceid.userGetOTP(userid)
+    checkClient = kycfaceid.veriryTenant(tenantid,tenantkey)
 
-    js = json.dumps(verifica, indent=2)
-    resp = Response(js, status=200, mimetype='application/json')
+    resp=None
+
+    if(len(checkClient)>0):
+        verifica = kycfaceid.userGetOTP(userid,tenantid)
+        js = json.dumps(verifica, indent=2)
+        resp = Response(js, status=200, mimetype='application/json')
+    else:
+        resp = Response("Unauthorized", status=401 , mimetype='application/json')
 
     return  resp
 
-@app.route('/kycfaceid/user/faceauth', methods=['POST'])
+@app.route('/kycfaceid/' + version + '/user/faceauth', methods=['POST'])
 @jwt_required
 def userFaceAuth():
-    userid = request.form['userId']     
-    file = request.files['image']  
+    tenantid = request.headers.get('Tenantid','No Tenantid')
+    tenantkey = request.headers.get('Tenantkey','No Tenantkey')
+    userid = 0     
+    data_url = request.form['image']
+    dataUrlPattern = re.compile('data:image/(png|jpeg);base64,(.*)$')
+    image_data = data_url
+    image_data = dataUrlPattern.match(image_data).group(2)
+    image_data = image_data.encode()
+    image_data = base64.b64decode(image_data)
     
-    f = os.path.join("/root/work/face/", file.filename)
-    
+    checkClient = kycfaceid.veriryTenant(tenantid,tenantkey)
 
-    file.save(f)
+    resp=None
 
-    verifica = kycfaceid.userFaceAuth(f, userid)
+    if(len(checkClient)>0):
+        img = "/var/www/flask/face/faces/userauth.jpg"
+        with open(img, 'wb') as f:
+            f.write(image_data)
+        verifica = kycfaceid.userFaceAuth(img,tenantid)
 
-    js = json.dumps(verifica, indent=2)
-    resp = Response(js, status=200, mimetype='application/json')
+        js = json.dumps(verifica, indent=2)
+        resp = Response(js, status=200, mimetype='application/json')
+    else:
+        resp = Response("Unauthorized", status=401 , mimetype='application/json')
 
     return  resp
 
-@app.route('/kycfaceid/user/remove', methods=['POST'])
+@app.route('/kycfaceid/' + version + '/user/remove', methods=['POST'])
 @jwt_required
 def userRemove():
+    tenantid = request.headers.get('Tenantid','No Tenantid')
+    tenantkey = request.headers.get('Tenantkey','No Tenantkey')
     userid = request.form['userId']     
-           
-    verifica = kycfaceid.userRemove(userid)
+    
+    checkClient = kycfaceid.veriryTenant(tenantid,tenantkey)
 
-    js = json.dumps(verifica, indent=2)
-    resp = Response(js, status=200, mimetype='application/json')
+    resp=None
+
+    if(len(checkClient)>0):
+        verifica = kycfaceid.userRemove(userid,tenantid)
+        js = json.dumps(verifica, indent=2)
+        resp = Response(js, status=200, mimetype='application/json')
+    else:
+        resp = Response("Unauthorized", status=401 , mimetype='application/json')
 
     return  resp
 
-@app.route('/kycfaceid/user/removeface', methods=['POST'])
+@app.route('/kycfaceid/' + version + '/user/removeface', methods=['POST'])
 @jwt_required
 def userRemoveFace():
+    tenantid = request.headers.get('Tenantid','No Tenantid')
+    tenantkey = request.headers.get('Tenantkey','No Tenantkey')
     userid = request.form['userId']   
     faceid = request.form['faceId']   
-           
-    verifica = kycfaceid.userRemoveFace(userid,faceid)
+    
+    checkClient = kycfaceid.veriryTenant(tenantid,tenantkey)
 
-    js = json.dumps(verifica, indent=2)
-    resp = Response(js, status=200, mimetype='application/json')
+    resp=None
+
+    if(len(checkClient)>0):
+        verifica = kycfaceid.userRemoveFace(userid,faceid,tenantid)
+        js = json.dumps(verifica, indent=2)
+        resp = Response(js, status=200, mimetype='application/json')
+    else:
+        resp = Response("Unauthorized", status=401 , mimetype='application/json')
 
     return  resp
 
-@app.route('/kycfaceid/user/role', methods=['POST'])
+@app.route('/kycfaceid/' + version + '/user/role', methods=['POST'])
 @jwt_required
 def userRole():
+    tenantid = request.headers.get('Tenantid','No Tenantid')
+    tenantkey = request.headers.get('Tenantkey','No Tenantkey')
     roles = request.form['roles']   
     userid = request.form['userId']   
-           
-    verifica = kycfaceid.userRole(userid,faceid)
+    
+    checkClient = kycfaceid.veriryTenant(tenantid,tenantkey)
 
-    js = json.dumps(verifica, indent=2)
-    resp = Response(js, status=200, mimetype='application/json')
+    resp=None
+
+    if(len(checkClient)>0):
+        verifica = kycfaceid.userRole(userid,faceid,tenantid)
+        js = json.dumps(verifica, indent=2)
+        resp = Response(js, status=200, mimetype='application/json')
+    else:
+        resp = Response("Unauthorized", status=401 , mimetype='application/json')
 
     return  resp
 
-@app.route('/kycfaceid/user/list', methods=['POST'])
+@app.route('/kycfaceid/' + version + '/user/list', methods=['POST'])
 @jwt_required
 def userList():
+    tenantid = request.headers.get('Tenantid','No Tenantid')
+    tenantkey = request.headers.get('Tenantkey','No Tenantkey')
 
-    verifica = kycfaceid.userList()
+    checkClient = kycfaceid.veriryTenant(tenantid,tenantkey)
 
-    js = json.dumps(verifica, indent=2)
-    resp = Response(js, status=200, mimetype='application/json')
+    resp=None
+
+    if(len(checkClient)>0):
+        verifica = kycfaceid.userList(tenantid)
+        js = json.dumps(verifica, indent=2)
+        resp = Response(js, status=200, mimetype='application/json')
+    else:
+        resp = Response("Unauthorized", status=401 , mimetype='application/json')
 
     return  resp
 
 
-@app.route('/kycfaceid/image/recognize', methods=['POST'])
+@app.route('/kycfaceid/' + version + '/image/recognize', methods=['POST'])
+@jwt_required
 def recognize():
     try:
+        tenantid = request.headers.get('Tenantid','No Tenantid')
+        tenantkey = request.headers.get('Tenantkey','No Tenantkey')
         data_url = request.form['image']
         dataUrlPattern = re.compile('data:image/(png|jpeg);base64,(.*)$')
         image_data = data_url
         image_data = dataUrlPattern.match(image_data).group(2)
         image_data = image_data.encode()
         image_data = base64.b64decode(image_data)
- 
-        img = "/var/www/flask/face/faces/recon.jpg"
-        with open(img, 'wb') as f:
-            f.write(image_data)
-     
-        verifica = kycfaceid.recognize(img)
         
+        checkClient = kycfaceid.veriryTenant(tenantid,tenantkey)
 
-        js = json.dumps(verifica, indent=2)
-        resp = Response(js, status=200, mimetype='application/json')
+        resp=None
+
+        if(len(checkClient)>0):
+            img = "/var/www/flask/face/faces/recon.jpg"
+            with open(img, 'wb') as f:
+                f.write(image_data)
+            
+            verifica = kycfaceid.recognize(img,tenantid)        
+            js = json.dumps(verifica, indent=2)
+            resp = Response(js, status=200, mimetype='application/json')
+        else:
+            resp = Response("Unauthorized", status=401 , mimetype='application/json')
      
         return  resp
     except Exception as inst:
         return Response(retorna)
 
-@app.route('/kycfaceid/image/verify', methods=['POST'])
+@app.route('/kycfaceid/' + version + '/image/verify', methods=['POST'])
+@jwt_required
 def verify():
+    tenantid = request.headers.get('Tenantid','No Tenantid')
+    tenantkey = request.headers.get('Tenantkey','No Tenantkey')
     file = request.files['image']
     userid = request.form['userid']
+    
+    checkClient = kycfaceid.veriryTenant(tenantid,tenantkey)
 
-    f = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
-        
-    file.save(f)
+    resp=None
 
+    if(len(checkClient)>0):
+        f = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)    
+        file.save(f)
 
-    verifica = kycfaceid.verify(f, userId)
+        verifica = kycfaceid.verify(f, userId,tenantid)
 
-    js = json.dumps(verifica)
-    resp = Response(js, status=200, mimetype='application/json')
+        js = json.dumps(verifica)
+        resp = Response(js, status=200, mimetype='application/json')
+    else:
+        resp = Response("Unauthorized", status=401 , mimetype='application/json')
 
     return  resp
 
 @app.route('/login', methods=['POST','GET'])
 def login():
-    if not request.is_json:
-        return jsonify({"msg": "Missing JSON in request"}), 400
+    tenantid = request.headers.get('Tenantid','No Tenantid')
+    tenantkey = request.headers.get('Tenantkey','No Tenantkey')
 
-    username = request.json.get('username', None)
-    password = request.json.get('password', None)
-    if not username:
-        return jsonify({"msg": "Missing username parameter"}), 400
-    if not password:
-        return jsonify({"msg": "Missing password parameter"}), 400
+    checkClient = kycfaceid.veriryTenant(tenantid,tenantkey)
+        
+    access_token = None
 
-    if username != 'test' or password != 'test':
-        return jsonify({"msg": "Bad username or password"}), 401
+    if(len(checkClient) > 0):
+        if not request.is_json:
+            return jsonify({"msg": "Missing JSON in request"}), 400
 
-    # Identity can be any data that is json serializable
-    access_token = create_access_token(identity=username)
-    return jsonify(access_token=access_token), 200
+        username = request.json.get('username', None)
+        password = request.json.get('password', None)
+       
+        if not username:
+            return jsonify({"msg": "Missing username parameter"}), 400
+        if not password:
+            return jsonify({"msg": "Missing password parameter"}), 400
+
+        if username != 'test' or password != 'test':
+            return jsonify({"msg": "Bad username or password"}), 401
+
+        # Identity can be any data that is json serializable
+        access_token = create_access_token(identity=username)
+        
+        return jsonify(access_token=access_token), 200
+
+    else:
+        return Response(checkClient.rowcount) #jsonify({"msg": "Bad username or password"}), 401
+
+
 
 @app.route('/protected', methods=['GET'])
 @jwt_required
