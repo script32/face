@@ -34,6 +34,8 @@
   
 #### Ahora instala bibliotecas de Python dentro de este virtual environment
 	pip install numpy scipy matplotlib scikit-image scikit-learn ipython
+
+	Ejecutar el comando "pip list" en la terminar y verificar el listado con el piplist.txt 
   
 #### salir virtual environment
 	deactivate
