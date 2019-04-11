@@ -105,7 +105,7 @@
 	cd /var/www/flask
 ### Clonar proyecto
 	git clone https://github.com/script32/face
-###Mover archivo app.wsgi
+### Mover archivo app.wsgi
 	cd /var/www/flask/face
 	mv app.wsgi /var/www/flask/app.wsgi
 
@@ -252,7 +252,8 @@ Dado a que el servidor web esta en apache se debe configurar wsgi para generar l
 	apt-get install libapache2-mod-wsgi
 
 #### Crear archivo app.wsgi
-Este archivo es el que ejecuta las llamdas de apache y conecta el python
+
+Si no existe el archivo en app.wsgi en la carpeta /var/www/flask/ se debe crear, este archivo es el que ejecuta las llamdas de apache y conecta el python
 	
 	#!/usr/bin/python3
 	import sys
