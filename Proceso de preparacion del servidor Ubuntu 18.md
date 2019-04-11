@@ -110,6 +110,13 @@
 	mv app.wsgi /var/www/flask/app.wsgi
 
 
+### Configuracion WSGI
+Dado a que el servidor web esta en apache se debe configurar wsgi para generar la conexion y la ejecion de los servicios.
+
+#### Instalacion
+	apt-get install libapache2-mod-wsgi
+
+
 ## Paso 4. Configuracion Apache y Firewall
 
 #### Instalar Apache
@@ -245,11 +252,6 @@ Certbot ahora puede encontrar el bloque de VirtualHost correcto y actualizarlo.
 	
 	sudo pip install wheel
 
-### Paso 6 Configuracion WSGI
-Dado a que el servidor web esta en apache se debe configurar wsgi para generar la conexion y la ejecion de los servicios.
-
-#### Instalacion
-	apt-get install libapache2-mod-wsgi
 
 #### Crear archivo app.wsgi
 
