@@ -99,7 +99,15 @@
 	apt-get install apt-file
 
 ## Paso 3. Clonar Github Face
+### Crear carpeta de la aplicacion
+	mkdir /var/www/flask/
+### Posicionarse en la carpeta
+	cd /var/www/flask
+### Clonar proyecto
 	git clone https://github.com/script32/face
+###Mover archivo app.wsgi
+	cd /var/www/flask/face
+	mv app.wsgi /var/www/flask/app.wsgi
 
 
 ## Paso 4. Configuracion Apache y Firewall
@@ -229,11 +237,11 @@ Certbot ahora puede encontrar el bloque de VirtualHost correcto y actualizarlo.
 	sudo apt install python3-venv
 
 ### buscar la carpeta que genero la descarga del git clone, face
-	cd path/face
+	cd /var/www/flask/face
 
 	python3.6 -m venv face
 
-	source faceenv/bin/activate
+	source face/bin/activate
 	
 	sudo pip install wheel
 
