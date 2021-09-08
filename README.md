@@ -1,4 +1,4 @@
-#Reconocimiento facial
+# Reconocimiento facial
 
 El origen de esta API es Reconocer y manipular caras desde Python o desde la línea de comando con
 la biblioteca de reconocimiento facial más simple del mundo.
